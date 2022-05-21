@@ -1,6 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "MySphereShooter_GameMode.h"
 #include "MySphereShooter_SphereSpawner.h"
 #include "Kismet/KismetMathLibrary.h"
@@ -13,7 +10,7 @@ AMySphereShooter_GameMode::AMySphereShooter_GameMode()
 
 }
 
-void AMySphereShooter_GameMode::OnSphereShot(AMySphereShooter_Sphere* ShotSphere)
+void AMySphereShooter_GameMode::OnSphereShot(const AMySphereShooter_Sphere* ShotSphere)
 {
     AMySphereShooter_GameState* GameStateReference = GetGameState<AMySphereShooter_GameState>();
     if (GameState != nullptr)
@@ -27,11 +24,10 @@ void AMySphereShooter_GameMode::OnSphereShot(AMySphereShooter_Sphere* ShotSphere
     IncrementNecessarySpheresDestroyedNumber();
 }
 
-void AMySphereShooter_GameMode::SpawnSpheres(float NewRadius, int32 NewSpawningSpheresNumber)
+void AMySphereShooter_GameMode::SpawnSpheres(float NewRadius, int32 NewSpawningSpheresNumber) const
 {
-
-    float PreviousRadius = SphereSpawner->GetSpawningRadius();
-    int32 PreviousSpawningNumber = SphereSpawner->GetSpawnedSpheresNumber();
+    const float PreviousRadius = SphereSpawner->GetSpawningRadius();
+    const int32 PreviousSpawningNumber = SphereSpawner->GetSpawnedSpheresNumber();
     
     /*
     * In order not to lose sphere spawner parameters they are saved in Previous variables
@@ -42,15 +38,15 @@ void AMySphereShooter_GameMode::SpawnSpheres(float NewRadius, int32 NewSpawningS
     SetSphereSpawnerParameters(PreviousRadius, PreviousSpawningNumber);
 }
 
-int32 AMySphereShooter_GameMode::GetUnnecessarySpheresAmount()
+int32 AMySphereShooter_GameMode::GetUnnecessarySpheresAmount() const
 { 
     /*
     * Sphere spawner contains a number of all generated spheres
     * Game mode contains a number of necessary spheres.
     * So unnecessary spheres amount = all spheres number - number of necessary spheres
     */
-    
-    int32 AllSpawningNumber = SphereSpawner->GetSpawnedSpheresNumber();
+
+    const int32 AllSpawningNumber = SphereSpawner->GetSpawnedSpheresNumber();
 
     float UnnecessarySpheresAmount = AllSpawningNumber - MinimumSpheresNumberToCompleteWave;
     if (UnnecessarySpheresAmount < 0)
@@ -66,8 +62,8 @@ void AMySphereShooter_GameMode::BeginPlay()
     Super::BeginPlay();
     if (IsValid(AMySphereShooter_SphereSpawner::StaticClass()))
     {
-        FVector SpawnerLocation = GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorLocation();
-        FRotator SpawnerRotation = GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorRotation();
+        const FVector SpawnerLocation = GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorLocation();
+        const FRotator SpawnerRotation = GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorRotation();
 
         SphereSpawner = GetWorld()->SpawnActor<AMySphereShooter_SphereSpawner>(SphereSpawnerClass, SpawnerLocation, SpawnerRotation);
         if (SphereSpawner != nullptr)
@@ -79,11 +75,11 @@ void AMySphereShooter_GameMode::BeginPlay()
     }
 }
 
-bool AMySphereShooter_GameMode::IsShotSphereNecessary(AMySphereShooter_Sphere* ShotSphere)
+bool AMySphereShooter_GameMode::IsShotSphereNecessary(const AMySphereShooter_Sphere* ShotSphere) const
 {
-    FVector SpawnPoint = SphereSpawner->GetSpawnPoint();
-    float Distance = UKismetMathLibrary::Vector_Distance(ShotSphere->GetActorLocation(), SpawnPoint);
-    return UKismetMathLibrary::LessEqual_FloatFloat(Distance, MinimumSpawningRadiusToCompleteWave);
+    const FVector SpawnPoint = SphereSpawner->GetSpawnPoint();
+    const float Distance = UKismetMathLibrary::Vector_Distance(ShotSphere->GetActorLocation(), SpawnPoint);
+    return UKismetMathLibrary::LessEqual_DoubleDouble(Distance, MinimumSpawningRadiusToCompleteWave);
 }
 
 void AMySphereShooter_GameMode::DestroyRemainingSpheres() const
@@ -122,18 +118,18 @@ void AMySphereShooter_GameMode::IncrementNecessarySpheresDestroyedNumber()
     }
 }
 
-void AMySphereShooter_GameMode::IncreaseSphereSpawnerParameters()
+void AMySphereShooter_GameMode::IncreaseSphereSpawnerParameters() const
 {
-    float PreviousRadius = SphereSpawner->GetSpawningRadius();
-    int32 PreviousSpawningNumber = SphereSpawner->GetSpawnedSpheresNumber();
+    const float PreviousRadius = SphereSpawner->GetSpawningRadius();
+    const int32 PreviousSpawningNumber = SphereSpawner->GetSpawnedSpheresNumber();
 
-    float NewRadius = PreviousRadius * (1 + SpawningRadiusPercentageIncrease / 100.f);
-    int32 NewSpawningNumber = PreviousSpawningNumber * (1 + SpheresAmountPercentageIncrease / 100.f);
+    const float NewRadius = PreviousRadius * (1 + SpawningRadiusPercentageIncrease / 100.f);
+    const int32 NewSpawningNumber = PreviousSpawningNumber * (1 + SpheresAmountPercentageIncrease / 100.f);
 
     SetSphereSpawnerParameters(NewRadius, NewSpawningNumber);
 }
 
-void AMySphereShooter_GameMode::SetSphereSpawnerParameters(float Radius, int32 SpawningSpheresNumber)
+void AMySphereShooter_GameMode::SetSphereSpawnerParameters(float Radius, int32 SpawningSpheresNumber) const
 {
     SphereSpawner->SetSpawnedSpheresNumber(SpawningSpheresNumber);
     SphereSpawner->SetSpawningRadius(Radius);

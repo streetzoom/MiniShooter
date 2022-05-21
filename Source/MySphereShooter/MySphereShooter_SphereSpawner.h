@@ -1,5 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
@@ -8,7 +6,7 @@
 
 class AMySphereShooter_Sphere;
 
-/* Created to spawn given number of spheres at given radius */
+// Spawn given number of spheres at given radius
 
 UCLASS()
 class MYSPHERESHOOTER_API AMySphereShooter_SphereSpawner : public AActor
@@ -18,26 +16,22 @@ class MYSPHERESHOOTER_API AMySphereShooter_SphereSpawner : public AActor
 public:	
 	// Sets default values for this actor's properties
 	AMySphereShooter_SphereSpawner();
-
-	/* 
-	* Spawn AllSpawnedSpheresNumber spheres in SpawningRadius
-	* Called by game mode when it is needed to spawn spheres wave
-	*/
+	
 	UFUNCTION()
-	void SpawnSpheresInRadius();
-
+	void SpawnSpheresInRadius() const;
+	
 	UFUNCTION()
 	FVector GetSpawnPoint() const { return SpawnPoint; }
 
-	/* Called by game mode before spawning wave to configure spawning point */
+	// Configure spawning point
 	UFUNCTION()
 	void SetSpawnPoint(FVector NewSpawnPoint) { SpawnPoint = NewSpawnPoint; }
 	
-	/* Called by game mode before spawning wave to configure spawned spheres number */
+	// Configure spawned spheres number
 	UFUNCTION()
 	void SetSpawnedSpheresNumber(int32 NewSpawnedSpheresNumber) { AllSpawnedSpheresNumber = NewSpawnedSpheresNumber; }
 	
-	/* Called by game mode before spawning wave to configure spawning radius */
+	// Configure spawning radius
 	UFUNCTION()
 	void SetSpawningRadius(float NewRadius) { SpawningRadius = NewRadius; }
 
@@ -46,29 +40,27 @@ public:
 
 	UFUNCTION()
 	int32 GetSpawnedSpheresNumber()  const { return AllSpawnedSpheresNumber; }
-
-	/* Called when the game starts or when spawned */
+	
 	virtual void BeginPlay() override;
+	
 protected:
-	/* Number of all spawned spheres = Number of spheres at 1500 distance + Number of spheres at other distance */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Default Spawn Parameters")
 	int32 AllSpawnedSpheresNumber;
 
-	/* General spawning radius in meters */
+	// Spawning radius
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Default Spawn Parameters")
 	float SpawningRadius;
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Default Spawn Parameters")
 	FVector SpawnPoint;
 
-	/* Subclass of spheres to choose spawned sphere class in editor */
+	// Choose spawned sphere
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Default Spawn Parameters")
 	TSubclassOf<AMySphereShooter_Sphere> SphereClass;
 
 	UFUNCTION()
-	FVector GetRandomPointInSphere(float SphereRadius);
+	FVector GetRandomPointInSphere(float SphereRadius) const;
+	
 public:	
-	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
 };

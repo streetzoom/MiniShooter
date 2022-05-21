@@ -1,15 +1,12 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "MySphereShooter_Projectile.h"
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "MySphereShooter_Sphere.h"
 
-// Sets default values
+// Default values
 AMySphereShooter_Projectile::AMySphereShooter_Projectile()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+ 	// Actor call Tick() every frame. Turn off to improve performance
 	PrimaryActorTick.bCanEverTick = true;
 
 	CollisionSphere = CreateDefaultSubobject<USphereComponent>(TEXT("Sphere Collision"));
@@ -29,10 +26,8 @@ AMySphereShooter_Projectile::AMySphereShooter_Projectile()
 	ProjectileMovement->bShouldBounce = true;
 
 	InitialLifeSpan = 3.0f;
-
 }
 
-// Called when the game starts or when spawned
 void AMySphereShooter_Projectile::BeginPlay()
 {
 	Super::BeginPlay();
@@ -40,11 +35,9 @@ void AMySphereShooter_Projectile::BeginPlay()
 	CollisionSphere->OnComponentBeginOverlap.AddDynamic(this, &AMySphereShooter_Projectile::OnOverlap);
 }
 
-// Called every frame
 void AMySphereShooter_Projectile::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 void AMySphereShooter_Projectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)

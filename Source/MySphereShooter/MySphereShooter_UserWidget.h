@@ -1,5 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
@@ -15,12 +13,12 @@ class MYSPHERESHOOTER_API UMySphereShooter_UserWidget : public UUserWidget
 	GENERATED_BODY()
 	
 public:
-	/* Called by game state to update player statistics sent in NewText */
+	// Update player statistics
 	UFUNCTION()
-	void SetWidgetText(FText NewText);
+	void SetWidgetText(FText NewText) const;
 
 protected:
-	/* Bounded widget variable to display player statistics */
+	// Display player statistics 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UTextBlock* TextLabel;
 };

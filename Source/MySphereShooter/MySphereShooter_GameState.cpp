@@ -1,6 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "MySphereShooter_GameState.h"
 #include "MySphereShooter_UserWidget.h"
 #include "Blueprint/UserWidget.h"
@@ -30,7 +27,7 @@ void AMySphereShooter_GameState::IncNumberSpheresDestroyed()
 	UpdateTextWidget();
 }
 
-void AMySphereShooter_GameState::UpdateTextWidget()
+void AMySphereShooter_GameState::UpdateTextWidget() const
 {
 	if (TextWidget != nullptr)
 	{

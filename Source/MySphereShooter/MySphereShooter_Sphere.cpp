@@ -1,9 +1,5 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "MySphereShooter_Sphere.h"
 #include "Components/SphereComponent.h"
-
 #include "Particles/ParticleSystemComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
@@ -12,10 +8,10 @@
 #include "Engine/World.h"
 #include "TimerManager.h"
 
-// Sets default values
+// Default values
 AMySphereShooter_Sphere::AMySphereShooter_Sphere()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+ 	// Actor call Tick() every frame. Turn off to improve performance
 	PrimaryActorTick.bCanEverTick = true;
  
     SetSphereParametersFromGameMode();
@@ -36,7 +32,7 @@ AMySphereShooter_Sphere::AMySphereShooter_Sphere()
     StaticMeshComp->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
     
     //scale static mesh from its base diameter (100) to new diameter (2.f * InitialSphereRadius / 100) set in game mode
-    float RadiusRatio = 2.f * InitialSphereRadius / 100;
+    const float RadiusRatio = 2.f * InitialSphereRadius / 100;
     StaticMeshComp->SetRelativeScale3D(FVector(RadiusRatio));
     
     //align static mesh with collision sphere in order to proper spawning guided by the distance between spheres
@@ -49,7 +45,7 @@ AMySphereShooter_Sphere::AMySphereShooter_Sphere()
 
     ExplosionSound = CreateDefaultSubobject<USoundBase>(TEXT("ExplosionSound"));
     
-    //effect, sound and mesh are hardcoded for simplicity and because code writer considers that they are constant-constant-constant parameters
+    // Effect, sound and mesh are hardcoded for simplicity
     static ConstructorHelpers::FObjectFinder<UStaticMesh>SphereMeshAsset(TEXT("StaticMesh'/Game/StarterContent/Shapes/Shape_Sphere.Shape_Sphere'"));
     StaticMeshComp->SetStaticMesh(SphereMeshAsset.Object);
 
@@ -60,7 +56,6 @@ AMySphereShooter_Sphere::AMySphereShooter_Sphere()
     ExplosionSound = ExplosionSoundObject.Object;
 }
 
-// Called when the game starts or when spawned
 void AMySphereShooter_Sphere::BeginPlay()
 {
 	Super::BeginPlay();
@@ -74,15 +69,16 @@ void AMySphereShooter_Sphere::GraduallyChangeSizeWhenSpawned()
     * that is not equal to InitialSphereRadius set in editor
     * Algorithm of changing sphere size when it is spawned:
     * 1. Define how many steps is needed to change radius from InitialSphereRadius to MinimalSphereRadius based on RadiusChangingStep
-    * 2. Define start, final sphere scale and scale step based on radiuses
+    * 2. Define start, final sphere scale and scale step based on radii
     * 3. Calculate current scale based on RadiusChangingTick that represents number of this function calling
     */
+
+    const int32 Steps = UKismetMathLibrary::FCeil((InitialSphereRadius - MinimalSphereRadius) / RadiusChangingStep);
+    const float RadiusRatioWithBaseMesh = 2.f * InitialSphereRadius / 100;
+    const float FinalRadiusRatio = (RadiusRatioWithBaseMesh) * MinimalSphereRadius / InitialSphereRadius;
+    const float RadiusRatioStep = (RadiusRatioWithBaseMesh - FinalRadiusRatio) / Steps;
+    const float CurrentRadiusRatio = RadiusRatioWithBaseMesh - RadiusChangingTick * RadiusRatioStep;
     
-    int32 Steps = UKismetMathLibrary::FCeil((InitialSphereRadius - MinimalSphereRadius) / RadiusChangingStep);
-    float RadiusRatioWithBaseMesh = 2.f * InitialSphereRadius / 100;
-    float FinalRadiusRatio = (RadiusRatioWithBaseMesh) * MinimalSphereRadius / InitialSphereRadius;
-    float RadiusRatioStep = (RadiusRatioWithBaseMesh - FinalRadiusRatio) / Steps;
-    float CurrentRadiusRatio = RadiusRatioWithBaseMesh - RadiusChangingTick * RadiusRatioStep;
     if (RadiusChangingTick > Steps)
     { 
         GetWorldTimerManager().ClearTimer(TimerHandle);
@@ -94,23 +90,21 @@ void AMySphereShooter_Sphere::GraduallyChangeSizeWhenSpawned()
     }  
 }
 
-// Called every frame
 void AMySphereShooter_Sphere::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
-void AMySphereShooter_Sphere::ShowEffectsBeforeDestroy()
+void AMySphereShooter_Sphere::ShowEffectsBeforeDestroy() const
 {
-    FVector SphereLocation = GetActorLocation();
+    const FVector SphereLocation = GetActorLocation();
     if (ParticleComp)
         UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ParticleComp->Template, SphereLocation, GetActorRotation());
     if (ExplosionSound)
         UGameplayStatics::PlaySoundAtLocation(this, ExplosionSound, SphereLocation);
 }
 
-void AMySphereShooter_Sphere::OnSphereWasShot()
+void AMySphereShooter_Sphere::OnSphereWasShot() const
 {
     AMySphereShooter_GameMode* GameMode = Cast<AMySphereShooter_GameMode>(UGameplayStatics::GetGameMode(GetWorld()));
     if (GameMode != nullptr)
@@ -121,7 +115,7 @@ void AMySphereShooter_Sphere::OnSphereWasShot()
 
 void AMySphereShooter_Sphere::SetSphereParametersFromGameMode()
 {
-    AMySphereShooter_GameMode* GameMode = Cast<AMySphereShooter_GameMode>(UGameplayStatics::GetGameMode(GetWorld()));
+    const AMySphereShooter_GameMode* GameMode = Cast<AMySphereShooter_GameMode>(UGameplayStatics::GetGameMode(GetWorld()));
     if (GameMode != nullptr)
     {
         InitialSphereRadius = GameMode->GetInitialSphereRadius();

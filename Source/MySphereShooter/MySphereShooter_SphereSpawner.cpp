@@ -1,17 +1,13 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "MySphereShooter_SphereSpawner.h"
-#include "Components/SphereComponent.h"
 #include "MySphereShooter_Sphere.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Engine/EngineTypes.h"
 #include "Kismet/GameplayStatics.h"
 
-// Sets default values
+// Default values
 AMySphereShooter_SphereSpawner::AMySphereShooter_SphereSpawner()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+ 	// Actor call Tick() every frame. Turn off to improve performance
 	PrimaryActorTick.bCanEverTick = true;
 	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("DefaultSceneRoot"));
 	SpawnPoint = GetActorLocation();
@@ -19,34 +15,22 @@ AMySphereShooter_SphereSpawner::AMySphereShooter_SphereSpawner()
 	SpawningRadius = 2000;
 }
 
-
-// Called when the game starts or when spawned
 void AMySphereShooter_SphereSpawner::BeginPlay()
 {
 	Super::BeginPlay();
-
 }
 
-
-// Called every frame
 void AMySphereShooter_SphereSpawner::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
-void AMySphereShooter_SphereSpawner::SpawnSpheresInRadius()
+void AMySphereShooter_SphereSpawner::SpawnSpheresInRadius() const
 {
 	for (int i = 0; i < AllSpawnedSpheresNumber; ++i)
 	{
-		AMySphereShooter_Sphere* CreatedSphere = nullptr;
+		const AMySphereShooter_Sphere* CreatedSphere = nullptr;
 		
-		/*
-		* while loop is used to finally spawn sphere.
-		* Sphere may not be spawned at first attempt because of AdjustIfPossibleButDontSpawnIfColliding settings 
-		* when Unreal tries to spawn it near the other object such as another sphere. 
-		* In such wave i tried to implement necessary condition of distance between spheres.
-		*/
 		while (!CreatedSphere) {
 			FActorSpawnParameters ActorSpawnParams;
 			ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
@@ -58,20 +42,17 @@ void AMySphereShooter_SphereSpawner::SpawnSpheresInRadius()
 	}
 }
 
-FVector AMySphereShooter_SphereSpawner::GetRandomPointInSphere(float SphereRadius)
+FVector AMySphereShooter_SphereSpawner::GetRandomPointInSphere(float SphereRadius) const
 {
 	FVector SpawnLocation = UKismetMathLibrary::RandomUnitVector() * UKismetMathLibrary::RandomFloatInRange(0, SphereRadius) + SpawnPoint;
-	/*
-	* These hardcoded values define room size
-	* Their usage let spheres be created only inside of the playing area.
-	*/
-	float LeftConstraintCoord = -2100;
-	float RightConstraintCoord = 1600;
 
-	float FrontConstraintCoord = 1900;
-	float BackConstraintCoord = -1900;
-
-	float FloorLevel = 200;
+	// Define room size to let spheres be created only inside of the playing area
+	float constexpr LeftConstraintCoord = -2100;
+	float constexpr RightConstraintCoord = 1600;
+	float constexpr FrontConstraintCoord = 1900;
+	float constexpr BackConstraintCoord = -1900;
+	float constexpr FloorLevel = 200;
+	
 	if (SpawnLocation.Z < FloorLevel)
 		SpawnLocation.Z += FloorLevel - SpawnLocation.Z;
 

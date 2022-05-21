@@ -1,5 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
@@ -49,5 +47,5 @@ protected:
 protected:
 	/*Updates textWidget when player shoots sphere or wave number is increased*/
 	UFUNCTION()
-	void UpdateTextWidget();
+	void UpdateTextWidget() const;
 };

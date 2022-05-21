@@ -1,5 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
@@ -21,7 +19,7 @@ public:
 	
 	/* Called by sphere when it is shot to update shot spheres number and verify if shot sphere lies at 1500 distance */
 	UFUNCTION()
-	void OnSphereShot(AMySphereShooter_Sphere* ShotSphere);
+	void OnSphereShot(const AMySphereShooter_Sphere* ShotSphere);
 
 	UFUNCTION()
 	float GetInitialSphereRadius() const { return InitialSphereRadius; }
@@ -81,7 +79,7 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sphere Spawner Parameters")
 	float SpawningRadiusPercentageIncrease = 5.f;
 
-	/* Used to choose shpere spawner class in blueprints. Needed to let user configure sphere spawner blueprint class */
+	/* Used to choose sphere spawner class in blueprints. Needed to let user configure sphere spawner blueprint class */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Sphere Spawner Parameters")
 	TSubclassOf<AMySphereShooter_SphereSpawner> SphereSpawnerClass;
 
@@ -91,7 +89,7 @@ protected:
 
 	/* Check if shot sphere lies at 1500 distance from spawning point */
 	UFUNCTION()
-	bool IsShotSphereNecessary(AMySphereShooter_Sphere* ShotSphere);
+	bool IsShotSphereNecessary(const AMySphereShooter_Sphere* ShotSphere) const;
 
 	/* Destroys the rest of the sphere when condition of spawning new wave is completed */
 	UFUNCTION()
@@ -103,19 +101,19 @@ protected:
 
 	/* Increase sphere spawner general radius and number of spawned spheres before spawn new wave  */
 	UFUNCTION()
-	void IncreaseSphereSpawnerParameters();
+	void IncreaseSphereSpawnerParameters() const;
 
 	/* Set sphere spawner number of spawned spheres and spawn radius  */
 	UFUNCTION()
-	void SetSphereSpawnerParameters(float Radius, int32 SpawningSpheresNumber);
+	void SetSphereSpawnerParameters(float Radius, int32 SpawningSpheresNumber) const;
 
-	/* Makes sphere spawner spawn given number of spheres at given radius  
-	*  It is called two times to spawn necessary spheres and to spawn the rest of spheres
+	/* Sphere spawner spawn given number of spheres at given radius  
+	*  Spawn necessary spheres and rest of spheres
 	*/
 	UFUNCTION()
-	void SpawnSpheres(float Radius, int32 SpawningSpheresNumber);
+	void SpawnSpheres(float Radius, int32 SpawningSpheresNumber) const;
 
-	/* Used to calculate number of spheres that should be spawned at 2000 distance */
+	/* Calculate number of spheres that should be spawned at 2000 distance */
 	UFUNCTION()
-	int32 GetUnnecessarySpheresAmount();
+	int32 GetUnnecessarySpheresAmount() const;
 };

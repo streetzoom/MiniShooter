@@ -1,5 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
@@ -8,10 +6,7 @@
 
 /*
 * Represent custom player 
-* All code is copied from FPS Template Character,
-* but instead of using standart projectile class
-* I put here my own.
-* Also i removed VR related code.
+* Removed VR related code.
 */
 
 UCLASS()
@@ -20,15 +15,13 @@ class MYSPHERESHOOTER_API AMySphereShooter_MainCharacter : public ACharacter
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this character's properties
+	// Default values
 	AMySphereShooter_MainCharacter();
 
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 public:	
-	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 	// Called to bind functionality to input

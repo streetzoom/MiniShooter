@@ -1,5 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
@@ -22,7 +20,6 @@ public:
 	AMySphereShooter_Sphere();
 
 protected:
-	/* Called when the game starts or when spawned */
 	virtual void BeginPlay() override;
 	
 	/* Change spawned sphere size by timer call when sphere is spawned */
@@ -30,16 +27,15 @@ protected:
 	void GraduallyChangeSizeWhenSpawned();
 
 public:	
-	/* Called every frame */
 	virtual void Tick(float DeltaTime) override;
 
 	/* Emit sound and particle effects before sphere is destroyed */
 	UFUNCTION()
-		void ShowEffectsBeforeDestroy();
+		void ShowEffectsBeforeDestroy() const;
 
 	/* Calls Game Mode class to verify if shot sphere lies from spawning point at the distance of 1500 */
 	UFUNCTION()
-		void OnSphereWasShot();
+		void OnSphereWasShot() const;
 
 protected:
 	/* Defines distance between spheres by blocking collision */
@@ -86,9 +82,5 @@ protected:
 	FTimerHandle TimerHandle;
 
 protected:
-	/* 
-	*  Used to set sphere geometry parameters before sphere is spawned. 
-	*  It is necessary in order to spawn sphere with custom scale that is set in blueprint.
-	*/
 	void SetSphereParametersFromGameMode();
 };

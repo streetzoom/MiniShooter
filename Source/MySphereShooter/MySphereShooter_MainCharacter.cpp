@@ -1,6 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "MySphereShooter_MainCharacter.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -9,10 +6,10 @@
 #include "Kismet/GameplayStatics.h"
 #include "MySphereShooter_Projectile.h"
 
-// Sets default values
+// Default values
 AMySphereShooter_MainCharacter::AMySphereShooter_MainCharacter()
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+ 	// Actor call Tick() every frame. Turn off to improve performance
 	PrimaryActorTick.bCanEverTick = true;
 
 	GetCapsuleComponent()->InitCapsuleSize(40.f, 95.f);
@@ -45,7 +42,6 @@ AMySphereShooter_MainCharacter::AMySphereShooter_MainCharacter()
 	GunOffset = FVector(100.f, 0.f, 10.0f);
 }
 
-// Called when the game starts or when spawned
 void AMySphereShooter_MainCharacter::BeginPlay()
 {
 	Super::BeginPlay();
@@ -57,11 +53,9 @@ void AMySphereShooter_MainCharacter::BeginPlay()
 	AnimInstance = HandsMesh->GetAnimInstance();
 }
 
-// Called every frame
 void AMySphereShooter_MainCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 // Called to bind functionality to input
